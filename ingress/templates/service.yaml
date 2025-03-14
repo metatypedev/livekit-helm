@@ -1,9 +1,12 @@
-{{- if .Values.serviceEnabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "ingress.fullname" . }}
   labels: {{- include "ingress.labels" . | nindent 4 }}
+  {{- with .Values.loadBalancerAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ default "LoadBalancer" .Values.ingress.serviceType }}
   ports:
@@ -21,4 +24,3 @@ spec:
 
   selector:
     {{- include "ingress.selectorLabels" . | nindent 4 }}
-{{- end }}
